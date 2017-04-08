@@ -14,6 +14,7 @@ public class Splash extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
+
         TextView textView = (TextView)findViewById(R.id.title);
         Typeface typeface = Typeface.createFromAsset(getAssets(),"code.otf");
         textView.setTypeface(typeface);
@@ -29,6 +30,6 @@ public class Splash extends AppCompatActivity {
                 finish();
 
             }
-        }, 9000);
+        }, 3000);
     }
 }

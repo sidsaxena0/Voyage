@@ -1,4 +1,4 @@
-package com.sid.voyage;
+package com.sid.voyage.pojo;
 
 /**
  * Created by sid on 08/04/17.
@@ -31,5 +31,31 @@ public class Suggestion {
     public void setPrice(String price) {
         this.price = price;
     }
+
+    public String getImage() {
+        return image;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getCityId() {
+        return cityId;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public String getCurrency() {
+        return currency;
+    }
+
+
+    public String getPrice() {
+        return price;
+    }
+
 
 }
