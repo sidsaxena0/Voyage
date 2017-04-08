@@ -2,12 +2,10 @@ package com.sid.voyage.adapters;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -17,7 +15,6 @@ import com.sid.voyage.pojo.City;
 
 import java.util.ArrayList;
 
-import javax.crypto.CipherOutputStream;
 
 /**
  * Created by sid on 08/04/17.

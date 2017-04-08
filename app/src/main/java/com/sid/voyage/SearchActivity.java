@@ -49,6 +49,8 @@ public class SearchActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
+                //start voice search
+
 
 
             }
@@ -102,7 +104,7 @@ public class SearchActivity extends AppCompatActivity {
 
                         City city = new City();
                         city.setCityId(array.getJSONObject(i).getString("_id"));
-                        city.setName(array.getJSONObject(i).getString("text"));
+                        city.setName(array.getJSONObject(i).getString("text").substring(0,1).toUpperCase()+array.getJSONObject(i).getString("text").substring(1));
                         city.setState(array.getJSONObject(i).getString("st"));
                         city.setCountry(array.getJSONObject(i).getString("co"));
                         city.setaLong(Double.parseDouble(array.getJSONObject(i).getString("lon")));

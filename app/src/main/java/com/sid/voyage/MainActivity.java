@@ -74,6 +74,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    //Gets available items from api and displays them
+
     void getRecommendedItems()
     {
 

@@ -8,7 +8,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/text"
-        android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+        android:textSize="16sp"
         android:text="Place name"
         android:padding="10dp"/>
 
@@ -16,8 +16,9 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="0.6dp"
-        android:layout_margin="10dp"
+        android:layout_marginLeft="23dp"
         android:layout_below="@+id/text"
+        android:layout_marginRight="10dp"
         android:background="#9d9d9d"/>
 
 
