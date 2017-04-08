@@ -1,8 +1,10 @@
 package com.sid.voyage.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,8 +12,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.sid.voyage.CityActivity;
 import com.sid.voyage.R;
-import com.sid.voyage.pojo.Suggestion;
+import com.sid.voyage.models.Suggestion;
 
 import java.util.ArrayList;
 
@@ -43,11 +46,25 @@ public class SuggestionsAdapter extends RecyclerView.Adapter<SuggestionsAdapter.
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(ViewHolder holder, final int position) {
 
         holder.heading.setText(suggestions.get(position).getName());
-        holder.price.setText(suggestions.get(position).getPrice());
+        holder.price.setText(Html.fromHtml(suggestions.get(position).getPrice()));
         Glide.with(context).load(suggestions.get(position).getImage()).into(holder.placeImage);
+
+        holder.card.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent = new Intent(context, CityActivity.class);
+                intent.putExtra("id",suggestions.get(position).getCityId());
+                intent.putExtra("city",suggestions.get(position).getName());
+                intent.putExtra("country",suggestions.get(position).getCountry());
+                context.startActivity(intent);
+
+
+            }
+        });
 
     }
 

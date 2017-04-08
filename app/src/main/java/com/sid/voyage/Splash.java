@@ -23,7 +23,6 @@ public class Splash extends AppCompatActivity {
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                //Do something after 100ms
 
                 startActivity(new Intent(Splash.this,MainActivity.class));
 

@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import com.sid.voyage.CityActivity;
 import com.sid.voyage.R;
-import com.sid.voyage.pojo.City;
+import com.sid.voyage.models.City;
 
 import java.util.ArrayList;
 
@@ -41,7 +41,7 @@ public class CityAdapter extends RecyclerView.Adapter<CityAdapter.ViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(ViewHolder holder, final int position) {
 
         holder.name.setText(cities.get(position).getName()+", "+cities.get(position).getState()+", "+cities.get(position).getCountry());
         holder.layout.setOnClickListener(new View.OnClickListener() {
@@ -49,8 +49,10 @@ public class CityAdapter extends RecyclerView.Adapter<CityAdapter.ViewHolder> {
             public void onClick(View v) {
 
                 Intent intent = new Intent(context, CityActivity.class);
+                intent.putExtra("id",cities.get(position).getCityId());
+                intent.putExtra("city",cities.get(position).getName());
+                intent.putExtra("country",cities.get(position).getCountry());
                 context.startActivity(intent);
-
 
             }
         });

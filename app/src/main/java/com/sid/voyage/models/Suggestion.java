@@ -1,4 +1,4 @@
-package com.sid.voyage.pojo;
+package com.sid.voyage.models;
 
 /**
  * Created by sid on 08/04/17.

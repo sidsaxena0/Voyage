@@ -3,26 +3,17 @@ package com.sid.voyage;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.support.design.widget.NavigationView;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.TextView;
 
 import com.sid.voyage.adapters.SuggestionsAdapter;
-import com.sid.voyage.pojo.Suggestion;
+import com.sid.voyage.models.Suggestion;
 import com.sid.voyage.utils.ConnectionUtils;
 import com.sid.voyage.utils.ResponseCallback;
 
@@ -31,6 +22,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
@@ -98,7 +90,23 @@ public class MainActivity extends AppCompatActivity {
                         suggestion.setCurrency(array.getJSONObject(i).getString("currency"));
                         suggestion.setName(array.getJSONObject(i).getString("name"));
                         suggestion.setCountry(array.getJSONObject(i).getString("countryName"));
-                        suggestion.setPrice(array.getJSONObject(i).getString("price"));
+
+                        byte ptext[] = new byte[0];
+                        try {
+                            ptext = array.getJSONObject(i).getString("data").getBytes("ISO-8859-1");
+                            suggestion.setPrice(new String(ptext, "UTF-8"));
+
+                        } catch (UnsupportedEncodingException e) {
+                            e.printStackTrace();
+
+                            suggestion.setPrice(array.getJSONObject(i).getString("price") +array.getJSONObject(i).getString("currency"));
+
+                        }
+
+                        suggestion.setPrice(array.getJSONObject(i).getString("data"));
+
+
+
                         suggestion.setImage(array.getJSONObject(i).getString("image"));
 
                         suggestions.add(suggestion);

@@ -18,27 +18,43 @@
             android:id="@+id/item_image"/>
 
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/title"
-            android:padding="10dp"
-            android:layout_below="@+id/item_image"
-            android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
-            android:text="Place Name"/>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:background="@drawable/gradient"
+            android:layout_height="170dp"
+            android:orientation="vertical">
 
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/price"
-            android:text="$4000"
-            android:textStyle="bold"
-            android:textColor="#010101"
-            android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
-            android:layout_below="@+id/title"
-            android:padding="10dp"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/title"
+                android:padding="10dp"
+                android:layout_above="@+id/price"
+                android:layout_centerHorizontal="true"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+                android:textColor="#fff"
+                android:layout_gravity="center_horizontal"
+                android:text="Place Name"/>
 
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/price"
+                android:text="$4000"
+                android:layout_alignParentBottom="true"
+                android:textStyle="bold"
+                android:layout_centerHorizontal="true"
+                android:layout_gravity="center_horizontal"
+                android:textColor="#fff"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+                android:padding="5dp"/>
+
+
+
+
+        </RelativeLayout>
 
 
     </RelativeLayout>
