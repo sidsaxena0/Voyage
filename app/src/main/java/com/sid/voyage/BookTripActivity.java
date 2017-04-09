@@ -199,7 +199,6 @@ public class BookTripActivity extends AppCompatActivity  implements DatePickerDi
                             if (shot.child("origin").getValue().toString().equals(fromCity.getText().toString()) && shot.child("destination").getValue().toString().equals(toCity.getText().toString()) && shot.hasChild("interests")) {
                                 //interests
 
-                                Toast.makeText(BookTripActivity.this, "From "+shot.child("origin").getValue().toString() + shot.child("destination").getValue().toString(), Toast.LENGTH_SHORT).show();
                                 String interest = shot.child("interests").getValue().toString();
 
                                 if (interest.contains(","))
