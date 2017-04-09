@@ -1,20 +1,30 @@
 package com.sid.voyage;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.View;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.MaterialDialog;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.sid.voyage.adapters.SuggestionsAdapter;
 import com.sid.voyage.models.Suggestion;
 import com.sid.voyage.utils.ConnectionUtils;
+import com.sid.voyage.utils.MyUtil;
 import com.sid.voyage.utils.ResponseCallback;
 
 import org.json.JSONArray;
@@ -28,9 +38,6 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
 
 
-    RecyclerView recyclerView;
-    SuggestionsAdapter adapter;
-    ArrayList<Suggestion> suggestions = new ArrayList<>();
 
 
     @Override
@@ -38,101 +45,143 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        TextView textView = (TextView)findViewById(R.id.title);
-        TextView subtitle = (TextView)findViewById(R.id.subtitle);
-        Typeface typeface = Typeface.createFromAsset(getAssets(),"code.otf");
-        Typeface vonique = Typeface.createFromAsset(getAssets(),"vonique.ttf");
-        textView.setTypeface(typeface);
-        subtitle.setTypeface(vonique);
+        final ImageView home = (ImageView)findViewById(R.id.home);
+        final ImageView profile = (ImageView)findViewById(R.id.profile);
+        final ImageView trips = (ImageView)findViewById(R.id.trip);
 
-        EditText search = (EditText) findViewById(R.id.search_box);
-        search.setOnClickListener(new View.OnClickListener() {
+        home.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                startActivity(new Intent(MainActivity.this,SearchActivity.class));
+                FragmentTransaction transaction1 = getSupportFragmentManager().beginTransaction();
+
+
+                transaction1.replace(R.id.main_container, new HomeFragment());
+                transaction1.addToBackStack(null);
+                transaction1.commit();
+                home.setColorFilter(ContextCompat.getColor(MainActivity.this,R.color.colorPrimary));
+                profile.setColorFilter(Color.parseColor("#9d9d9d"));
+                trips.setColorFilter(Color.parseColor("#9d9d9d"));
 
 
             }
         });
 
 
-        recyclerView = (RecyclerView)findViewById(R.id.recyclerView);
-        recyclerView.setLayoutManager(new GridLayoutManager(this,2));
-        adapter = new SuggestionsAdapter(this,suggestions);
-        recyclerView.setAdapter(adapter);
-        getRecommendedItems();
+        profile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                FragmentTransaction transaction1 = getSupportFragmentManager().beginTransaction();
+
+
+                transaction1.replace(R.id.main_container, new ProfileFragment());
+                transaction1.addToBackStack(null);
+                transaction1.commit();
+                profile.setColorFilter(ContextCompat.getColor(MainActivity.this,R.color.colorPrimary));
+                home.setColorFilter(Color.parseColor("#9d9d9d"));
+                trips.setColorFilter(Color.parseColor("#9d9d9d"));
+
+
+            }
+        });
+
+
+        trips.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                FragmentTransaction transaction1 = getSupportFragmentManager().beginTransaction();
+
+
+                transaction1.replace(R.id.main_container, new MyTripsFragment());
+                transaction1.addToBackStack(null);
+                transaction1.commit();
+                trips.setColorFilter(ContextCompat.getColor(MainActivity.this,R.color.colorPrimary));
+                home.setColorFilter(Color.parseColor("#9d9d9d"));
+                profile.setColorFilter(Color.parseColor("#9d9d9d"));
+
+            }
+
+
+
+        });
+
+
+        //init with home
+
+        FragmentTransaction transaction1 = getSupportFragmentManager().beginTransaction();
+
+
+        transaction1.replace(R.id.main_container, new HomeFragment());
+        transaction1.addToBackStack(null);
+        transaction1.commit();
+        home.setColorFilter(ContextCompat.getColor(MainActivity.this,R.color.colorPrimary));
+
+
+
+
+
+        checkInterests();
+
 
     }
 
 
-    //Gets available items from api and displays them
-
-    void getRecommendedItems()
+    void checkInterests()
     {
 
-        ConnectionUtils utils = new ConnectionUtils(this);
-        utils.makeGetRequest(new ResponseCallback() {
-            @Override
-            public void onResponse(String res) {
 
-                try {
-                    JSONObject object = new JSONObject(res);
+        if (MyUtil.getPref(this,"interests").equalsIgnoreCase("na"))
+        {
 
-                    JSONArray array = object.getJSONObject("data").getJSONArray("flight");
+            String[] interests = new String[]{"Music","Games","Religion","Food","Dance","Politics"};
 
-                    suggestions.clear();
 
-                    for (int i = 0; i <array.length(); i++) {
 
-                        Suggestion suggestion = new Suggestion();
-                        suggestion.setCityId(array.getJSONObject(i).getString("cityId"));
-                        suggestion.setCurrency(array.getJSONObject(i).getString("currency"));
-                        suggestion.setName(array.getJSONObject(i).getString("name"));
-                        suggestion.setCountry(array.getJSONObject(i).getString("countryName"));
 
-                        byte ptext[] = new byte[0];
-                        try {
-                            ptext = array.getJSONObject(i).getString("data").getBytes("ISO-8859-1");
-                            suggestion.setPrice(new String(ptext, "UTF-8"));
+            //show dialogue
+            new MaterialDialog.Builder(this)
+                    .title("Choose your interests")
+                    .items(interests)
+                    .itemsCallbackMultiChoice(null, new MaterialDialog.ListCallbackMultiChoice() {
+                        @Override
+                        public boolean onSelection(MaterialDialog dialog, Integer[] which, CharSequence[] text) {
 
-                        } catch (UnsupportedEncodingException e) {
-                            e.printStackTrace();
 
-                            suggestion.setPrice(array.getJSONObject(i).getString("price") +array.getJSONObject(i).getString("currency"));
+                            DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
 
+                            for (int i = 0; i <text.length ; i++) {
+
+                                databaseReference.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("interests").child(""+i).child("id").setValue(i);
+                                databaseReference.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("interests").child(""+i).child("name").setValue(text[i]);
+
+                            }
+
+
+                            databaseReference.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("interest").setValue(TextUtils.join(",",text));
+                            MyUtil.savePref(MainActivity.this,"interests", TextUtils.join(",",text));
+
+
+
+                            return true;
                         }
+                    })
+                    .positiveText("Choose")
+                    .show();
 
-                        suggestion.setPrice(array.getJSONObject(i).getString("data"));
-
-
-
-                        suggestion.setImage(array.getJSONObject(i).getString("image"));
-
-                        suggestions.add(suggestion);
-
-                    }
-
-                    adapter.notifyDataSetChanged();
+        }
+        else
+        {
+            //We are good to go ---let's check if match is available
 
 
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
 
-            }
+        }
 
-            @Override
-            public void onFailed(IOException e) {
 
-            }
-
-            @Override
-            public void onNoNetwork() {
-
-            }
-        },getString(R.string.base_url)+"widgets/brand/inspire?product=1&apiKey=ixicode!2$");
     }
+
 
 
     @Override

@@ -6,5 +6,6 @@ package com.sid.voyage;
 
 public class MySession {
 
+    public static String fromCity;
 
 }

@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "60792859210",
+    "firebase_url": "https://voyage-dabaa.firebaseio.com",
+    "project_id": "voyage-dabaa",
+    "storage_bucket": "voyage-dabaa.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:60792859210:android:2f016cd57eb93620",
+        "android_client_info": {
+          "package_name": "com.sid.voyage"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "60792859210-2ildr71rdh6ul538mn22kkvs01h7hgsc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD8P-Ql38UpCJCaY-7bmBIloqxCQ813USU"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

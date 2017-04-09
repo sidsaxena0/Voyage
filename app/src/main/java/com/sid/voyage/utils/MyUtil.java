@@ -1,42 +1,42 @@
 package com.sid.voyage.utils;
 
-import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.graphics.Matrix;
-import android.graphics.Point;
-import android.location.Address;
-import android.location.Geocoder;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.Uri;
-import android.os.Build;
-import android.os.Bundle;
-import android.os.Environment;
-import android.os.Handler;
-import android.os.Message;
 import android.util.Log;
-import android.view.Display;
-import android.view.WindowManager;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.util.List;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Date;
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-/**
- * Created by sidsa on 11/19/2016.
- */
+import static java.util.Calendar.DATE;
+import static java.util.Calendar.MONTH;
+import static java.util.Calendar.YEAR;
 
+/**
+ * Created by sidsa_000 on 7/16/2016.
+ */
 public class MyUtil {
 
-        public static Bitmap bitmap;
+    static SharedPreferences prefs;
+    static ArrayList<String> fav= new ArrayList<>();
 
     public static boolean isEmailValid(String email) {
         boolean isValid = false;
@@ -53,118 +53,91 @@ public class MyUtil {
     }
 
 
-
-
-    public static Uri saveFile(Activity context, Bitmap bitmap)
-    {
-        OutputStream fOut = null;
-        Uri outputFileUri=null;
-        try {
-            File root = new File(Environment.getExternalStorageDirectory()
-                    + File.separator + "temp"+File.separator + "pubapp" + File.separator);
-            boolean isDirectoryCreated  = root.mkdirs();
-            Log.d("Directory","Directory "+root.getPath()+" "+isDirectoryCreated);
-
-            saveTempPath(context,root.getPath());
-
-
-            File sdImageMainDirectory = new File(root, System.currentTimeMillis()+".jpg");
-            outputFileUri = Uri.fromFile(sdImageMainDirectory);
-            fOut = new FileOutputStream(sdImageMainDirectory);
-
-        } catch (Exception e) {
-            //Toast.makeText(activity, "Error occured. Please try again later.", Toast.LENGTH_SHORT).show();
-            e.printStackTrace();
-        }
-
-        try {
-
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, fOut);
-            if (fOut != null) {
-                fOut.flush();
-                fOut.close();
-            }
-        } catch (Exception e) {
-
-            e.printStackTrace();
-        }
-
-
-
-
-        return outputFileUri;
-    }
-
-
-    public static void clearPrefrences(Context context)
-    {
-        SharedPreferences.Editor editor = context.getSharedPreferences("APP", Context.MODE_PRIVATE).edit();
-        editor.clear();
-        editor.apply();
-    }
-
-
     public static void saveTempPath(Context context,String path)
     {
-        SharedPreferences.Editor editor = context.getSharedPreferences("APP", Context.MODE_PRIVATE).edit();
+        SharedPreferences.Editor editor = context.getSharedPreferences("APP", context.MODE_PRIVATE).edit();
         editor.putString("path", path);
         editor.apply();
     }
 
 
-    @SuppressLint("NewApi")
-    public static int getDeviceWidth(Activity activity) {
-        int deviceWidth = 0;
-
-        Point size = new Point();
-        WindowManager windowManager = activity.getWindowManager();
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            windowManager.getDefaultDisplay().getSize(size);
-            deviceWidth = size.x;
-        } else {
-            Display display = windowManager.getDefaultDisplay();
-            deviceWidth = display.getWidth();
+    public static int getDiffYears(Date first, Date last) {
+        Calendar a = getCalendar(first);
+        Calendar b = getCalendar(last);
+        int diff = b.get(YEAR) - a.get(YEAR);
+        if (a.get(MONTH) > b.get(MONTH) ||
+                (a.get(MONTH) == b.get(MONTH) && a.get(DATE) > b.get(DATE))) {
+            diff--;
         }
-        return deviceWidth;
+        return diff;
     }
 
-    @SuppressLint("NewApi")
-    public static int getDeviceHeight(Activity activity) {
-        int deviceHeight = 0;
+    public static Calendar getCalendar(Date date) {
+        Calendar cal = Calendar.getInstance(Locale.US);
+        cal.setTime(date);
+        return cal;
+    }
 
-        Point size = new Point();
-        WindowManager windowManager = activity.getWindowManager();
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            windowManager.getDefaultDisplay().getSize(size);
-            deviceHeight = size.y;
-        } else {
-            Display display = windowManager.getDefaultDisplay();
-            deviceHeight = display.getHeight();
+
+    public static String getPath(Context context)
+    {
+        SharedPreferences prefs = context.getSharedPreferences("APP", context.MODE_PRIVATE);
+        return  prefs.getString("path", null);
+    }
+
+
+    public static String[] getReports(Context context)
+    {
+        SharedPreferences prefs = context.getSharedPreferences("APP", context.MODE_PRIVATE);
+        String s =   prefs.getString("reports", "na");
+
+        if (s.equalsIgnoreCase("na"))
+            return null;
+        else
+        {
+            if (!s.contains(","))
+                return  new String[]{s};
+            else
+                s.split(",");
         }
-        return deviceHeight;
+
+        return null;
     }
 
 
-    public static Bitmap rotateImage(Bitmap source, float angle) {
-        Matrix matrix = new Matrix();
-        matrix.postRotate(angle);
-        return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix,
-                true);
+    public static void saveReports(Context context, String id)
+    {
+        SharedPreferences prefs = context.getSharedPreferences("APP", context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = context.getSharedPreferences("APP", Context.MODE_PRIVATE).edit();
+        String s =   prefs.getString("reports", "na");
+
+        if (s.equalsIgnoreCase("na"))
+        {
+            editor.putString("reports",id);
+        }
+        else
+        {
+            s = s+","+id;
+            editor.putString("reports",s);
+
+        }
+
+
+        editor.apply();
+
     }
 
 
+    public static void saveUser(Context context, String user)
+    {
 
-    public   static String[] suffixes =
-            //    0     1     2     3     4     5     6     7     8     9
-            { "th", "st", "nd", "rd", "th", "th", "th", "th", "th", "th",
-                    //    10    11    12    13    14    15    16    17    18    19
-                    "th", "th", "th", "th", "th", "th", "th", "th", "th", "th",
-                    //    20    21    22    23    24    25    26    27    28    29
-                    "th", "st", "nd", "rd", "th", "th", "th", "th", "th", "th",
-                    //    30    31
-                    "th", "st" };
+            SharedPreferences.Editor editor = context.getSharedPreferences("APP", Context.MODE_PRIVATE).edit();
+            editor.putString("user", user);
+            editor.apply();
+
+    }
+
 
 
 
@@ -177,114 +150,166 @@ public class MyUtil {
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
-
-    public static void getAddressFromLocation(final double latitude, final double longitude, final Context context, final Handler handler) {
-        Thread thread = new Thread() {
-            @Override
-            public void run() {
-                Geocoder geocoder = new Geocoder(context, Locale.getDefault());
-                String result = null;
-                try {
-                    Log.d("Receved","Just got lat long trying to find address Lat : "+latitude+ " Long: "+longitude);
-
-                    List<Address> addressList = geocoder.getFromLocation(
-                            latitude, longitude, 1);
-                    if (addressList != null && addressList.size() > 0) {
-                        Address address = addressList.get(0);
-                        StringBuilder sb = new StringBuilder();
-                        for (int i = 0; i < address.getMaxAddressLineIndex(); i++) {
-                            sb.append(address.getAddressLine(i)).append("\n");
-                        }
-                        address.getSubLocality();
-                        sb.append(address.getLocality()).append("\n");
-                        sb.append(address.getPostalCode()).append("\n");
-                        sb.append(address.getCountryName());
-                        result = address.getSubLocality()+", "+address.getLocality();
-                    }
-                } catch (IOException e) {
-                    Log.e("GEOCODER", "Unable connect to Geocoder", e);
-                } finally {
-                    Message message = Message.obtain();
-                    message.setTarget(handler);
-                    if (result != null) {
-                        message.what = 1;
-                        Bundle bundle = new Bundle();
-                        bundle.putString("address", result);
-                        message.setData(bundle);
-                    } else {
-                        message.what = 1;
-                        Bundle bundle = new Bundle();
-                        bundle.putString("address", "Unable to get location");
-                        message.setData(bundle);
-                    }
-                    message.sendToTarget();
-                }
-            }
-        };
-        thread.start();
+    public static double roundTwoDecimals(double d)
+    {
+        DecimalFormat twoDForm = new DecimalFormat("#.##");
+        return Double.valueOf(twoDForm.format(d));
     }
 
 
 
-    public static void saveUser(Context context, String user)
+
+    static void refreshUserInfo(final Context context, String id)
+    {
+        if (FirebaseAuth.getInstance().getCurrentUser()!=null)
+        {
+
+            DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
+            mDatabase.child("users").child(id).keepSynced(true);
+            mDatabase.addListenerForSingleValueEvent(
+
+                    new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            // Get user value
+                            try {
+                                JSONObject object = new JSONObject();
+
+                                object.put("name",dataSnapshot.child("name").getValue());
+                                object.put("email",dataSnapshot.child("email").getValue());
+                                object.put("phone",dataSnapshot.child("phone").getValue());
+                                object.put("country",dataSnapshot.child("country").getValue());
+                                object.put("image",dataSnapshot.child("image").getValue());
+
+
+                                if (dataSnapshot.hasChild("fav_breeds"))
+                                {
+                                    SharedPreferences.Editor editor = context.getSharedPreferences("APP", Context.MODE_PRIVATE).edit();
+                                    editor.putString("fav", String.valueOf(dataSnapshot.child("fav_breeds").getValue()));
+                                    editor.apply();
+
+
+                                    String[] favs = new String[0];
+
+                                    String f = String.valueOf(dataSnapshot.child("fav_breeds").getValue()).replaceAll(" ","");
+                                    if (f.contains(","))
+                                        favs = f.split(",");
+                                    else
+                                        favs[0]= f;
+
+                                    Collections.addAll(fav, favs);
+
+
+
+                                }
+
+                                MyUtil.saveUser(context,object.toString());
+
+
+
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+
+
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+                            Log.w("Tag", "getUser:onCancelled", databaseError.toException());
+                        }
+                    });
+
+        }
+
+
+//        user.getReference("")
+    }
+
+
+
+    public static void savePref(Context context, String key, String value)
     {
 
         SharedPreferences.Editor editor = context.getSharedPreferences("APP", Context.MODE_PRIVATE).edit();
-        editor.putString("user", user);
+        editor.putString(key, value);
+        editor.apply();
+
+    }
+
+
+    public static void savePref(Context context, String key, int value)
+    {
+
+        SharedPreferences.Editor editor = context.getSharedPreferences("APP", Context.MODE_PRIVATE).edit();
+        editor.putInt(key, value);
         editor.apply();
 
     }
 
 
 
-    public static String getUser(Context context)
-    {
-        SharedPreferences prefs = context.getSharedPreferences("APP", Context.MODE_PRIVATE);
 
-        return prefs.getString("user","na");
-
-    }
-
-
-    public static void saveString(Context context,String key, String value)
-    {
-        if(context!=null)
-        {
-            SharedPreferences.Editor editor = context.getSharedPreferences("APP", Context.MODE_PRIVATE).edit();
-            editor.putString(key, value);
-            editor.apply();
-        }
-
-
-    }
-
-
-    public static void saveBoolean(Context context,String key, boolean value)
+    static void savePref(Context context, String key, boolean value)
     {
 
-        SharedPreferences.Editor editor = context.getSharedPreferences("APP_BOOLS", Context.MODE_PRIVATE).edit();
+        SharedPreferences.Editor editor = context.getSharedPreferences("APP", Context.MODE_PRIVATE).edit();
         editor.putBoolean(key, value);
         editor.apply();
 
     }
 
-    public static boolean getBoolean(Context context,String key)
+
+
+    public static boolean getPrefBool(Context context, String key)
     {
 
-        SharedPreferences shared = context.getSharedPreferences("APP_BOOLS", Context.MODE_PRIVATE);
-        return shared.getBoolean(key,false);
-
-    }
-
-
-
-    public  static String getString(Context context, String key)
-    {
         SharedPreferences prefs = context.getSharedPreferences("APP", Context.MODE_PRIVATE);
+        return  prefs.getBoolean(key, false);
 
-        return prefs.getString(key,"na");
 
     }
 
 
+
+    public static int getPrefInt(Context context, String key)
+    {
+
+        SharedPreferences prefs = context.getSharedPreferences("APP", Context.MODE_PRIVATE);
+        return  prefs.getInt(key, 0);
+
+
+    }
+
+
+    public static String getPref(Context context, String key)
+    {
+
+        SharedPreferences prefs = context.getSharedPreferences("APP", Context.MODE_PRIVATE);
+        return  prefs.getString(key, "na");
+
+
+    }
+
+
+    public static Bitmap resize(Bitmap image, int maxWidth, int maxHeight) {
+        if (maxHeight > 0 && maxWidth > 0) {
+            int width = image.getWidth();
+            int height = image.getHeight();
+            float ratioBitmap = (float) width / (float) height;
+            float ratioMax = (float) maxWidth / (float) maxHeight;
+
+            int finalWidth = maxWidth;
+            int finalHeight = maxHeight;
+            if (ratioMax > 1) {
+                finalWidth = (int) ((float)maxHeight * ratioBitmap);
+            } else {
+                finalHeight = (int) ((float)maxWidth / ratioBitmap);
+            }
+            image = Bitmap.createScaledBitmap(image, finalWidth, finalHeight, true);
+            return image;
+        } else {
+            return image;
+        }
+    }
 }

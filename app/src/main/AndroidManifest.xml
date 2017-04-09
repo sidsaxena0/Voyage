@@ -26,12 +26,38 @@
             android:label="@string/title_activity_main"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
+            android:name=".LoginActivity"
+            android:label="@string/title_activity_login"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".SignupActivity"
+            android:label="@string/title_activity_signup"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
             android:name=".SearchActivity"
             android:label="@string/title_activity_search"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".CityActivity"
             android:label="@string/title_activity_city"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".HotelViewActivity"
+            android:label="@string/title_activity_hotel_view"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".BookTripActivity"
+            android:label="@string/title_activity_book_trip"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".CompanionActivity"
+            android:label="@string/title_activity_companion"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".MyProfile"
+            android:label="@string/title_activity_my_profile"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 

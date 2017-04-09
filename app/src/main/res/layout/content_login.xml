@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="10dp"
+    android:id="@+id/rootView"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".LoginActivity"
+    tools:showIn="@layout/activity_login">
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+
+        <ImageView
+            android:layout_width="76dp"
+            android:layout_height="76dp"
+            android:id="@+id/logo"
+            android:layout_marginTop="20dp"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/web_hi_res_512"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="20dp"
+        android:paddingTop="13dp"
+        android:paddingBottom="8dp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/logo"
+        android:text="Voyage : Your Trip Companion"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:textSize="17sp"
+        android:id="@+id/heading"
+        android:background="@drawable/rounded_chip"
+        android:textColor="@color/white"
+        android:paddingRight="20dp"/>
+
+
+
+
+    <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/username_layout"
+            android:layout_below="@+id/heading"
+            android:layout_margin="10dp">
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Email"
+                android:id="@+id/username"/>
+
+
+        </android.support.design.widget.TextInputLayout>
+
+
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/password_layout"
+            android:layout_below="@+id/username_layout"
+            android:layout_margin="10dp">
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Password"
+                android:id="@+id/password"/>
+
+
+        </android.support.design.widget.TextInputLayout>
+
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Login"
+            android:layout_marginTop="30dp"
+            android:background="@drawable/button_orange"
+            android:layout_below="@+id/password_layout"
+            android:textColor="@color/white"
+            android:id="@+id/buttonLogin"/>
+
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:layout_below="@+id/buttonLogin"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Forgot Password?"
+                android:textSize="17sp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:id="@+id/forgot_pass"
+                android:padding="10dp"
+                android:layout_gravity="center_horizontal"
+                android:textColor="#212121"/>
+
+
+            <TextView
+                android:layout_width="0.7dp"
+                android:background="#9e9e9e"
+                android:layout_weight="0"
+                android:layout_height="30dp" />
+
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Create Account"
+                android:layout_weight="1"
+                android:textSize="17sp"
+                android:id="@+id/create_acc"
+                android:gravity="center"
+                android:padding="10dp"
+                android:layout_gravity="center_horizontal"
+                android:textColor="#212121"/>
+
+
+
+        </LinearLayout>
+
+
+    </RelativeLayout>
+
+</android.support.v4.widget.NestedScrollView>

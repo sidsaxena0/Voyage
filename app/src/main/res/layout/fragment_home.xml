@@ -4,7 +4,10 @@
     android:layout_height="match_parent"
     tools:context="com.sid.voyage.HomeFragment">
 
-    <LinearLayout
+
+
+
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
@@ -17,22 +20,109 @@
             android:src="@drawable/taj"/>
 
 
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:background="#42424242"
+            android:layout_height="210dp">
+
+
+            <ImageView
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:id="@+id/image"
+                android:padding="5dp"
+                android:layout_marginTop="15dp"
+                android:layout_centerHorizontal="true"
+                android:src="@drawable/logo"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textColor="#fff"
+                android:layout_below="@+id/image"
+                android:layout_centerHorizontal="true"
+                android:text="Voyage"
+                android:id="@+id/title"
+                android:padding="5dp"
+                android:textSize="30sp"/>
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textColor="#fff"
+                android:layout_centerHorizontal="true"
+                android:padding="5dp"
+                android:textStyle="italic"
+                android:layout_below="@+id/title"
+                android:id="@+id/subtitle"
+                android:text="Your Travel Companion"
+                android:textSize="20sp"/>
+
+
+        </RelativeLayout>
+
+
+
+
+
+
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/search_card"
+            android:layout_alignBottom="@+id/hero_image"
+            android:layout_marginBottom="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginLeft="10dp">
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/search_box"
+                android:padding="10dp"
+                android:focusable="false"
+                android:clickable="false"
+                android:minHeight="40dp"
+                android:drawablePadding="5dp"
+                android:drawableLeft="@drawable/ic_action_search"
+                android:textColorHint="#666363"
+                android:background="@drawable/white_button"
+                android:hint=" Start Planning your Trip"/>
+
+
+        </android.support.v7.widget.CardView>
+
+
+
+
+
+
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Our Recommendations"
             android:padding="10dp"
+            android:id="@+id/label"
+            android:layout_below="@+id/hero_image"
             android:textColor="#010101"
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"/>
 
         <android.support.v7.widget.RecyclerView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_below="@+id/label"
             android:id="@+id/recyclerView"/>
 
 
-        </LinearLayout>
+    </RelativeLayout>
+
+
+
+
 
 
 

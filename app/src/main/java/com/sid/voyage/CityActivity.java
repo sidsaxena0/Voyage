@@ -1,23 +1,31 @@
 package com.sid.voyage;
 
+import android.content.Intent;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.sid.voyage.adapters.HotelsAdapter;
 import com.sid.voyage.models.Hotel;
 import com.sid.voyage.utils.ConnectionUtils;
+import com.sid.voyage.utils.MyUtil;
 import com.sid.voyage.utils.ResponseCallback;
 
 import org.json.JSONArray;
@@ -32,6 +40,7 @@ public class CityActivity extends AppCompatActivity {
     ImageView cityImage;
     TextView countryName,cityName,desc;
     HotelsAdapter adapter;
+    String image;
     ArrayList<Hotel> hotels = new ArrayList<>();
 
     @Override
@@ -59,13 +68,20 @@ public class CityActivity extends AppCompatActivity {
 
                 //Take to plan trip
 
+                Intent intent = new Intent(CityActivity.this,BookTripActivity.class);
+                intent.putExtra("toCity",getIntent().getStringExtra("city"));
+                intent.putExtra("image",image);
+                startActivity(intent);
 
 
             }
         });
 
+
+
         RecyclerView recyclerView = (RecyclerView)findViewById(R.id.recyclerView);
-        recyclerView.setLayoutManager(new GridLayoutManager(this,2));
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setNestedScrollingEnabled(false);
         adapter = new HotelsAdapter(this,hotels);
         recyclerView.setAdapter(adapter);
 
@@ -74,9 +90,25 @@ public class CityActivity extends AppCompatActivity {
 
 
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            Window window = getWindow();
+
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+
+            window.setStatusBarColor(Color.parseColor("#512DA8"));
+        }
+
+
+
 
 
     }
+
+
+
+
 
 
     @Override
@@ -144,25 +176,29 @@ public class CityActivity extends AppCompatActivity {
 
                     for (int i = 0; i <data.length(); i++) {
 
-                        Hotel hotel = new Hotel();
-                        hotel.setAddress(data.getJSONObject(i).getString("address"));
-                        hotel.setCity(data.getJSONObject(i).getString("cityName"));
-                        hotel.setCountry(data.getJSONObject(i).getString("countryName"));
-                        if(data.getJSONObject(i).has("description"))
-                        hotel.setDescription(data.getJSONObject(i).getString("description"));
-                        hotel.setCityId(data.getJSONObject(i).getString("cityId"));
-                        hotel.setId(data.getJSONObject(i).getString("id"));
-                        hotel.setState(data.getJSONObject(i).getString("stateName"));
-                        hotel.setName(data.getJSONObject(i).getString("name"));
-                        hotel.setMinimumPrice(data.getJSONObject(i).getString("minimumPrice"));
-                        hotel.setLongitude(data.getJSONObject(i).getString("longitude"));
-                        hotel.setLatitude(data.getJSONObject(i).getString("latitude"));
-                        if(data.getJSONObject(i).has("keyImageUrl"))
-                            hotel.setImage(data.getJSONObject(i).getString("keyImageUrl"));
-                        hotel.setXid(data.getJSONObject(i).getString("xid"));
+
+                        if (data.getJSONObject(i).has("cityId") && data.getJSONObject(i).has("keyImageUrl") && data.getJSONObject(i).has("minimumPrice"))
+                        {
+                            Hotel hotel = new Hotel();
+                            hotel.setAddress(data.getJSONObject(i).getString("address"));
+                            hotel.setCity(data.getJSONObject(i).getString("cityName"));
+                            hotel.setCountry(data.getJSONObject(i).getString("countryName"));
+                                hotel.setDescription(data.getJSONObject(i).getString("description"));
+                            hotel.setCityId(data.getJSONObject(i).getString("cityId"));
+                            hotel.setId(data.getJSONObject(i).getString("id"));
+                            if(data.getJSONObject(i).has("stateName"))
+                            hotel.setState(data.getJSONObject(i).getString("stateName"));
+                            hotel.setName(data.getJSONObject(i).getString("name"));
+                            hotel.setLongitude(data.getJSONObject(i).getString("longitude"));
+                            hotel.setLatitude(data.getJSONObject(i).getString("latitude"));
+                                hotel.setImage(data.getJSONObject(i).getString("keyImageUrl"));
+                            hotel.setXid(data.getJSONObject(i).getString("xid"));
+
+                                hotel.setMinimumPrice(MyUtil.roundTwoDecimals(Double.parseDouble(data.getJSONObject(i).getString("minimumPrice")))+"");
+                                hotels.add(hotel);
 
 
-                        hotels.add(hotel);
+                        }
 
 
                     }
@@ -179,6 +215,8 @@ public class CityActivity extends AppCompatActivity {
 
             @Override
             public void onFailed(IOException e) {
+
+                e.printStackTrace();
 
             }
 
@@ -209,6 +247,7 @@ public class CityActivity extends AppCompatActivity {
                     JSONObject data = object.getJSONObject("data");
 
                     Glide.with(CityActivity.this).load(data.getString("keyImageUrl")).into(cityImage);
+                    image = data.getString("keyImageUrl");
                     desc.setText(Html.fromHtml(data.getString("description")));
                     getTemperature(data.getString("latitude"),data.getString("longitude"));
 

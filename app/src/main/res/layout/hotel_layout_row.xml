@@ -23,8 +23,10 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:visibility="gone"
             android:layout_alignBottom="@+id/hotelImage"
-            android:background="@drawable/gradient">
+            android:background="@drawable/gradient"
+            android:id="@+id/linearLayout">
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -38,6 +40,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/address"
                 android:padding="10dp"
+                android:textStyle="bold"
                 android:textColor="@color/white"
                 android:text="Addtess"/>
 
@@ -52,8 +55,13 @@
             android:textColor="#010101"
             android:layout_below="@+id/hotelImage"
             android:text="Hotel Name"
+            android:id="@+id/hotelName"
+            android:layout_alignParentLeft="true"
             android:padding="10dp"
-            android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"/>
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+            android:layout_toRightOf="@+id/linearLayout"
+            android:layout_toLeftOf="@+id/price"
+            android:layout_toStartOf="@+id/price" />
 
 
         <TextView
@@ -63,6 +71,7 @@
             android:layout_alignParentRight="true"
             android:layout_below="@+id/hotelImage"
             android:text="3400"
+            android:id="@+id/price"
             android:textColor="@color/colorAccent"
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"/>
 

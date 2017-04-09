@@ -37,7 +37,7 @@ public class SearchActivity extends AppCompatActivity {
 
         RecyclerView recyclerView = (RecyclerView)findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new CityAdapter(this,cities);
+        adapter = new CityAdapter(this,cities,getIntent().getBooleanExtra("return",false));
         recyclerView.setAdapter(adapter);
 
         ImageView voice = (ImageView)findViewById(R.id.voice);

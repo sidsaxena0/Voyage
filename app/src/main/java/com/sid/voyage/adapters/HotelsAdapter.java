@@ -45,12 +45,9 @@ public class HotelsAdapter extends RecyclerView.Adapter<HotelsAdapter.ViewHolder
 
         Glide.with(context).load(hotels.get(position).getImage()).into(holder.imageView);
         holder.name.setText(hotels.get(position).getName());
-        if (hotels.get(position).getAddress()!=null)
-        holder.address.setText(hotels.get(position).getAddress());
-        else
-            holder.address.setText("");
 
-        holder.price.setText("Starting from "+hotels.get(position).getMinimumPrice());
+        holder.price.setText("₹"+hotels.get(position).getMinimumPrice());
+
 
 
     }
@@ -66,10 +63,14 @@ public class HotelsAdapter extends RecyclerView.Adapter<HotelsAdapter.ViewHolder
         ImageView imageView;
         CardView layout;
 
+
         public ViewHolder(View itemView) {
             super(itemView);
 
-            name = (TextView)itemView.findViewById(R.id.text);
+            name = (TextView)itemView.findViewById(R.id.hotelName);
+            price = (TextView)itemView.findViewById(R.id.price);
+            address = (TextView)itemView.findViewById(R.id.address);
+            imageView = (ImageView) itemView.findViewById(R.id.hotelImage);
             layout = (CardView) itemView.findViewById(R.id.card);
 
         }

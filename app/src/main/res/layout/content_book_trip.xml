@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.sid.voyage.BookTripActivity"
+    tools:showIn="@layout/activity_book_trip">
+
+
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:background="@drawable/dubai"
+        android:id="@+id/city"/>
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@android:color/transparent"
+        app:popupTheme="@style/AppTheme.PopupOverlay" />
+
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="20dp"
+        android:padding="10dp"
+        android:layout_below="@id/toolbar"
+        android:orientation="vertical"
+        android:background="@drawable/rounded_transparent_bg">
+
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint=" Choose Trip Date"
+            android:drawablePadding="5dp"
+            android:layout_marginTop="10dp"
+            android:padding="10dp"
+            android:id="@+id/date"
+            android:focusable="false"
+            android:clickable="false"
+            android:drawableLeft="@drawable/ic_action_date"
+            android:background="@drawable/white_button"/>
+
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint=" Travelling from city"
+            android:drawablePadding="5dp"
+            android:focusable="false"
+            android:clickable="false"
+            android:padding="10dp"
+            android:id="@+id/fromCity"
+            android:layout_marginTop="20dp"
+            android:drawableLeft="@drawable/ic_action_name"
+            android:background="@drawable/white_button"/>
+
+
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint=" Travelling to city"
+            android:focusable="false"
+            android:clickable="false"
+            android:drawablePadding="5dp"
+            android:padding="10dp"
+            android:layout_marginTop="20dp"
+            android:id="@+id/toCity"
+            android:drawableLeft="@drawable/ic_action_name"
+            android:background="@drawable/white_button"/>
+
+
+        <android.support.v7.widget.AppCompatSpinner
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/white_button"
+            android:id="@+id/spinner"/>
+
+
+
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:layout_marginTop="30dp"
+            android:id="@+id/find"
+            android:text="Find Companion"
+            android:background="@drawable/button_orange"/>
+
+
+
+
+    </LinearLayout>
+
+
+
+</RelativeLayout>

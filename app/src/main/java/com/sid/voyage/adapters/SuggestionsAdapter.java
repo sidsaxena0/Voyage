@@ -50,7 +50,7 @@ public class SuggestionsAdapter extends RecyclerView.Adapter<SuggestionsAdapter.
 
         holder.heading.setText(suggestions.get(position).getName());
         holder.price.setText(Html.fromHtml(suggestions.get(position).getPrice()));
-        Glide.with(context).load(suggestions.get(position).getImage()).into(holder.placeImage);
+        Glide.with(context).load(suggestions.get(position).getImage()).placeholder(R.drawable.placeholder).dontAnimate().into(holder.placeImage);
 
         holder.card.setOnClickListener(new View.OnClickListener() {
             @Override

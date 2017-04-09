@@ -1,5 +1,6 @@
 package com.sid.voyage.adapters;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
@@ -10,6 +11,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.sid.voyage.CityActivity;
+import com.sid.voyage.MySession;
 import com.sid.voyage.R;
 import com.sid.voyage.models.City;
 
@@ -22,13 +24,15 @@ import java.util.ArrayList;
 
 public class CityAdapter extends RecyclerView.Adapter<CityAdapter.ViewHolder> {
 
-    private Context context;
+    private Activity context;
     private ArrayList<City>  cities  = new ArrayList<>();
+    boolean returnData;
 
-    public CityAdapter(Context context, ArrayList<City> cities)
+    public CityAdapter(Activity context, ArrayList<City> cities, boolean returnData)
     {
         this.context = context;
         this.cities = cities;
+        this.returnData = returnData;
     }
 
 
@@ -48,11 +52,20 @@ public class CityAdapter extends RecyclerView.Adapter<CityAdapter.ViewHolder> {
             @Override
             public void onClick(View v) {
 
-                Intent intent = new Intent(context, CityActivity.class);
-                intent.putExtra("id",cities.get(position).getCityId());
-                intent.putExtra("city",cities.get(position).getName());
-                intent.putExtra("country",cities.get(position).getCountry());
-                context.startActivity(intent);
+                if (!returnData)
+                {
+                    Intent intent = new Intent(context, CityActivity.class);
+                    intent.putExtra("id",cities.get(position).getCityId());
+                    intent.putExtra("city",cities.get(position).getName());
+                    intent.putExtra("country",cities.get(position).getCountry());
+                    context.startActivity(intent);
+
+                }
+                else
+                {
+                    MySession.fromCity = cities.get(position).getName();
+                    context.onBackPressed();
+                }
 
             }
         });

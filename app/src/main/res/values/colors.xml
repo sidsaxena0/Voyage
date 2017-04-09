@@ -6,4 +6,7 @@
     <color name="off_white">#fefefe</color>
     <color name="transparent">#01fefefe</color>
     <color name="white">#ffffff</color>
+    <color name="black">#000000</color>
+    <color name="dark_grey">#212121</color>
+    <color name="grey">#424242</color>
 </resources>
